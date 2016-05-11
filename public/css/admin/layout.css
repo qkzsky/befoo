@@ -1,0 +1,25 @@
+@media(min-width:768px) {
+    #page-wrapper {
+        margin: 0 0 0 200px;
+        padding: 0 20px;
+    }
+    .sidebar {
+        width: 200px;
+    }
+}
+.x-page-header{margin: 10px 0px; height: 31px; line-height: 31px; font-size: 14px; font-weight: bold; color: #666; border-bottom: 1px solid #ddd;}
+
+.form-inline .form-group+.form-group{
+    margin-left: 10px;
+}
+
+table.dataTable {
+	clear: both;
+	/*margin-top: 5px !important;*/
+	margin-bottom: 5px !important;
+	max-width: none !important;
+}
+
+.search_box{
+    margin-bottom: 10px;
+}

@@ -1,0 +1,126 @@
+<?php use Helper\Html;?>
+<div id="role_manage" class="row">
+    <div class="col-lg-12">
+        <div class="well well-sm search_box">
+            <a class="btn btn-sm btn-primary pull-right" @click="addRole">新增角色</a>
+            <form id="search" class="form-inline" role="form">
+                <div class="form-group">
+                    <label class="control-label" for="role_name">角色名称</label>
+                    <input type="text" id="role_name" name="role_name" class="form-control input-sm" placeholder="角色名称">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="role_key">角色Key</label>
+                    <input type="text" id="role_key" name="role_key" class="form-control input-sm" placeholder="角色Key">
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="enable">是否启用</label>
+                    <select class="form-control input-sm" id="enable" name="enable">
+                        <option value="">全部</option>
+                        <option value="<?=YES?>"><?=YES?></option>
+                        <option value="<?=NO?>"><?=NO?></option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default btn-sm">查询</button>
+            </form>
+        </div>
+        <div class="table-responsive">
+            <table id="list_table" class="table table-striped table-bordered table-hover dataTable">
+                <thead>
+                <tr>
+                    <th class="sorting" data-field="role_id">角色ID</th>
+                    <th>角色名称</th>
+                    <th>角色Key</th>
+                    <th>是否启用</th>
+                    <th>备注</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <template v-if="pageList.total > 0">
+                    <tr v-for="item in pageList.data">
+                        <td v-html="item.role_id"></td>
+                        <td v-html="item.role_name"></td>
+                        <td v-html="item.role_key"></td>
+                        <td v-html="item.enable | switch"></td>
+                        <td v-html="item.remark"></td>
+                        <td v-html="item.create_time"></td>
+                        <td>
+                            <button class="btn btn-xs btn-primary" @click="editRole(item.role_id)"><i
+                                    class="fa fa-edit"></i> 编辑
+                            </button>
+                            <button class="btn btn-xs btn-success" @click="allocResource(item.role_id, item.role_name)"><i
+                                    class="fa fa-gears"></i> 分配资源
+                            </button>
+                        </td>
+                    </tr>
+                </template>
+                <tr v-show="pageList.total == 0">
+                    <td class="dataTable_empty">暂无数据</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+
+<script type="text/javascript">
+    $(function () {
+
+        var roleManage = new Vue({
+            el: "#role_manage",
+            data: {
+                pageList: {}
+            },
+            methods: {
+                addRole: function () {
+                    BootstrapDialog.show({
+                        title: '新增角色',
+                        message: $("<div/>").load("/admin/role/addRole")
+                    });
+                },
+                editRole: function (role_id) {
+                    BootstrapDialog.show({
+                        title: '编辑角色',
+                        message: $("<div/>").load("/admin/role/editRole?id=" + role_id)
+                    });
+                },
+                allocResource: function (role_id, role_name) {
+                    BootstrapDialog.show({
+                        title: '分配资源 -- ' + role_name,
+                        message: $("<div/>").load("/admin/role/allocResource?id=" + role_id)
+                    });
+                }
+            }
+        });
+
+        // 初始化页面数据
+        $("#list_table").on('initTableData', function () {
+            var $table = $(this);
+            var $pagination = $table.next(".m-pagination");
+            if ($pagination.data('page')) {
+                $pagination.page('destroy');
+            }
+
+            var params = $("#search").serializeArray();
+            params.push({name: "sort", value: $table.data("sort")});
+            $pagination.page({
+                pageSize: '<?=PAGE_SIZE?>',
+                remote: {
+                    url: '/admin/role/getPageData',
+                    params: params,
+                    success: function (result, pageIndex) {
+                        roleManage.pageList = result;
+                    }
+                }
+            });
+        });
+        $("#list_table").trigger('initTableData');
+
+        $("#search").submit(function () {
+            $("#list_table").trigger('initTableData');
+            return false;
+        });
+    });
+</script>
