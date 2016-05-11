@@ -68,10 +68,16 @@ class HttpClient
     private $_ca_file;
 
     /**
-     * 错误信息
-     * @var array
+     * 错误码
+     * @var
      */
-    private $_err_info;
+    private $_errno;
+
+    /**
+     * 错误信息
+     * @var string
+     */
+    private $_error;
 
     /**
      * 超时时间
@@ -385,12 +391,21 @@ class HttpClient
     }
 
     /**
-     * 获取错误信息
-     * @return array
+     * 获取错误码
+     * @return int
      */
-    public function getErrInfo()
+    public function getErrNo()
     {
-        return $this->_err_info;
+        return $this->_errno;
+    }
+
+    /**
+     * 获取错误码
+     * @return string
+     */
+    public function getError()
+    {
+        return $this->_error;
     }
 
     /**
@@ -486,15 +501,10 @@ class HttpClient
 
         $this->_response_code = isset($this->_curl_info['http_code']) ? $this->_curl_info['http_code'] : 0;
 
-        if ($response === null)
+        $this->_errno = curl_errno($ch);
+        $this->_error = curl_error($ch);
+        if ($this->_errno > 0)
         {
-            $this->_err_info = 'Http 请求失败.' . curl_errno($ch) . ',' . curl_error($ch);
-            curl_close($ch);
-            return false;
-        }
-        else if ($this->_response_code !== 200)
-        {
-            $this->_err_info = "Http 请求异常. Http code:" . $this->_response_code;
             curl_close($ch);
             return false;
         }
