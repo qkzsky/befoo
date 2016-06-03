@@ -35,7 +35,7 @@ class ResourceController extends AdminController
      */
     public function getPageDataAction()
     {
-        $page_index  = $this->getRequest()->getQuery('pageIndex', 1);
+        $page_index  = $this->getRequest()->getQuery('pageIndex');
         $page_size   = $this->getRequest()->getQuery('pageSize', 20);
         $sort        = $this->getRequest()->getQuery('sort', '');
         $sort_option = $this->formatSort($sort, array('resource_id', 'resource_type', 'menu_sort'));

@@ -99,14 +99,17 @@
         $("#list_table").on('initTableData', function () {
             var $table = $(this);
             var $pagination = $table.next(".m-pagination");
-            if ($pagination.data('page')) {
-                $pagination.page('destroy');
+            var currentPageIndex = 0;
+            if ($pagination.data('pagination')) {
+                currentPageIndex = $pagination.data('pagination').currentPageIndex;
+                $pagination.pagination('destroy');
             }
 
             var params = $("#search").serializeArray();
             params.push({name: "sort", value: $table.data("sort")});
-            $pagination.page({
+            $pagination.pagination({
                 pageSize: '<?=PAGE_SIZE?>',
+                pageIndex: currentPageIndex,
                 remote: {
                     url: '/admin/role/getPageData',
                     params: params,

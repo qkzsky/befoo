@@ -6,14 +6,14 @@ var animateTimer;
 function showAlertMsg(type, html, show_time, show_close_btn, callback_func) {
     var type = arguments[0] ? arguments[0] : 'success';
     var html = arguments[1] ? arguments[1] : '提交成功';
-    var show_time = arguments[2] ? arguments[2] : 3000;
-    var show_close_btn = arguments[3] ? arguments[3] : 0;
-    var callback_func = arguments[4] ? arguments[4] : null;
+    var callback_func = arguments[4] ? arguments[4] : (typeof arguments[3] === "function" ? arguments[3] : (typeof arguments[2] === "function" ? arguments[2] : null));
+    var show_time = (typeof arguments[2] === "number") ? arguments[2] : 3000;
+    var show_close_btn = (typeof arguments[3] === "boolean") ? arguments[3] : false;
 
-    if (show_time == '0') {
-        show_close_btn = 1;
+    if (show_time === 0) {
+        show_close_btn = true;
     }
-    var close_html = (show_close_btn == 1) ? '<a href="javascript:;" class="x-fixed-msg-close-btn" onclick="removeAlertMsg();">关闭</a>' : '';
+    var close_html = (show_close_btn == true) ? '<a href="javascript:;" class="x-fixed-msg-close-btn" onclick="removeAlertMsg();">关闭</a>' : '';
     $('.x-fixed-msg').remove();
 
     // 生成top和left都为负的不可见bom
