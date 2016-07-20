@@ -34,13 +34,9 @@ $.fn.pagination.defaults = ({
     noInfoText: '0条记录'
 });
 
-$(function () {
-    $(".sorting, .sorting_asc, .sorting_desc, .sorting_asc_disabled, .sorting_desc_disabled").on("selectstart", function () {
-        return false;
-    });
-
-    function initDataTable() {
-        var $table = $("table.dataTable");
+function initDataTable() {
+    $("table.dataTable").each(function(){
+        var $table = $(this);
         var $pagination = $table.next(".m-pagination");
         if (!$pagination.length) {
             $pagination = $("<div/>").addClass("m-pagination");
@@ -52,7 +48,13 @@ $(function () {
             var colNum = $table.find("thead > tr > th").length;
             $dataEmpty.attr("colspan", colNum);
         }
-    }
+    });
+}
+
+$(function () {
+    $(".sorting, .sorting_asc, .sorting_desc, .sorting_asc_disabled, .sorting_desc_disabled").on("selectstart", function () {
+        return false;
+    });
 
     $("table.dataTable thead").on("click", ".sorting, .sorting_asc, .sorting_desc", function () {
         var self = $(this);
