@@ -1,16 +1,18 @@
 <div class="row">
     <div class="col-sm-12">
-        <form id="resource_form" method="post" class="form-horizontal" role="form" action="{{requestUri}}">
+        <form id="resource_form" method="post" class="form-horizontal" role="form" action="{{requestUri}}" v-cloak>
             <div class="form-group">
                 <label class="control-label col-sm-3">上级资源</label>
                 <div class="col-sm-8">
                     <select name="resource_pid" class="form-control input-sm">
                         <option selected value="0">无</option>
-                        <option v-for="resource in resourceList" value="{{resource.resource_id}}" v-html="resource.resource_name"></option>
+                        <option v-for="resource in resourceList" value="{{resource.resource_id}}">
+                            {{resource.resource_name}}
+                        </option>
                     </select>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group required">
                 <label class="control-label col-sm-3">资源名称</label>
                 <div class="col-sm-8">
                     <input type="text" name="resource_name" class="form-control input-sm" placeholder="资源名称"
@@ -21,18 +23,18 @@
                     />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group required">
                 <label class="control-label col-sm-3">资源类型</label>
                 <div class="col-sm-8">
                     <select name="resource_type" class="form-control input-sm" v-model="selectType"
                             data-bv-notempty="true"
                     >
                         <option value="" disabled selected class="hidden">请选择</option>
-                        <option v-for="type in typeList" value="{{type}}" v-html="type"></option>
+                        <option v-for="type in typeList" value="{{type}}">{{type}}</option>
                     </select>
                 </div>
             </div>
-            <div class="form-group" v-show="selectType === 'menu'">
+            <div class="form-group required" v-show="selectType === 'menu'">
                 <label class="control-label col-sm-3">菜单排序</label>
                 <div class="col-sm-8">
                     <input type="number" name="menu_sort" class="form-control input-sm" value="0"
@@ -86,11 +88,6 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <div class="col-md-5 col-md-offset-3">
-                    <button type="submit" class="btn btn-primary">提交</button>
-                </div>
-            </div>
         </form>
     </div>
 </div>
@@ -119,8 +116,10 @@
                     toast(result.message, 'error');
                     return;
                 }
-                BootstrapDialog.closeAll();
-                toast(result.message, 'success');
+                BootstrapDialog.closestDialog($form).close();
+                toast(result.message, 'success', function () {
+                    $("#list_table").trigger('initTableData');
+                });
             }, 'json');
             return false;
         });

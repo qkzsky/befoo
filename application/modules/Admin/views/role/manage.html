@@ -1,5 +1,5 @@
 <?php use Helper\Html;?>
-<div id="role_manage" class="row">
+<div id="role_manage" class="row" v-cloak>
     <div class="col-lg-12">
         <div class="well well-sm search_box">
             <a class="btn btn-sm btn-primary pull-right" @click="addRole">新增角色</a>
@@ -39,18 +39,19 @@
                 <tbody>
                 <template v-if="pageList.total > 0">
                     <tr v-for="item in pageList.data">
-                        <td v-html="item.role_id"></td>
-                        <td v-html="item.role_name"></td>
-                        <td v-html="item.role_key"></td>
+                        <td>{{item.role_id}}</td>
+                        <td>{{item.role_name}}</td>
+                        <td>{{item.role_key}}</td>
                         <td v-html="item.enable | switch"></td>
-                        <td v-html="item.remark"></td>
-                        <td v-html="item.create_time"></td>
+                        <td>{{item.remark}}</td>
+                        <td>{{item.create_time}}</td>
                         <td>
                             <button class="btn btn-xs btn-primary" @click="editRole(item.role_id)"><i
                                     class="fa fa-edit"></i> 编辑
                             </button>
-                            <button class="btn btn-xs btn-success" @click="allocResource(item.role_id, item.role_name)"><i
-                                    class="fa fa-gears"></i> 分配资源
+                            <button class="btn btn-xs btn-success" @click="allocResource(item.role_id, item.role_name)">
+                                <i
+                                        class="fa fa-gears"></i> 分配资源
                             </button>
                         </td>
                     </tr>
@@ -75,21 +76,42 @@
             },
             methods: {
                 addRole: function () {
-                    BootstrapDialog.show({
+                    BootstrapDialog.confirm({
                         title: '新增角色',
-                        message: $("<div/>").load("/admin/role/addRole")
+                        message: $("<div/>").load("/admin/role/addRole"),
+                        draggable: true,
+                        callback: function (result) {
+                            if (result) {
+                                $("#role_form").submit();
+                                return false;
+                            }
+                        }
                     });
                 },
                 editRole: function (role_id) {
-                    BootstrapDialog.show({
+                    BootstrapDialog.confirm({
                         title: '编辑角色',
-                        message: $("<div/>").load("/admin/role/editRole?id=" + role_id)
+                        message: $("<div/>").load("/admin/role/editRole?id=" + role_id),
+                        draggable: true,
+                        callback: function (result) {
+                            if (result) {
+                                $("#role_form").submit();
+                                return false;
+                            }
+                        }
                     });
                 },
                 allocResource: function (role_id, role_name) {
-                    BootstrapDialog.show({
+                    BootstrapDialog.confirm({
                         title: '分配资源 -- ' + role_name,
-                        message: $("<div/>").load("/admin/role/allocResource?id=" + role_id)
+                        message: $("<div/>").load("/admin/role/allocResource?id=" + role_id),
+                        draggable: true,
+                        callback: function (result) {
+                            if (result) {
+                                $("#alloc_resource_submit").click();
+                                return false;
+                            }
+                        }
                     });
                 }
             }

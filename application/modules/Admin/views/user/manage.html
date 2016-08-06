@@ -1,5 +1,5 @@
 <?php use Helper\Html;?>
-<div id="user_manage" class="row">
+<div id="user_manage" class="row" v-cloak>
     <div class="col-lg-12">
         <div class="well well-sm search_box">
             <a class="btn btn-sm btn-primary pull-right" @click="addUser">新增用户</a>
@@ -16,7 +16,7 @@
                     <label class="control-label" for="role">角色</label>
                     <select class="form-control input-sm" id="role" name="role_id">
                         <option value="">全部</option>
-                        <option v-for="role in roleList" value="{{role.role_id}}" v-html="role.role_name"></option>
+                        <option v-for="role in roleList" value="{{role.role_id}}">{{role.role_name}}</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -58,16 +58,16 @@
                 <tbody>
                 <template v-if="pageList.total > 0">
                     <tr v-for="item in pageList.data">
-                        <td v-html="item.user_id"></td>
-                        <td v-html="item.username"></td>
-                        <td v-html="item.role_name"></td>
-                        <td v-html="item.nickname"></td>
+                        <td>{{item.user_id}}</td>
+                        <td>{{item.username}}</td>
+                        <td>{{item.role_name}}</td>
+                        <td>{{item.nickname}}</td>
                         <td v-html="item.enable | switch"></td>
                         <td v-html="item.admin | switch"></td>
-                        <td v-html="item.login_times"></td>
-                        <td v-html="item.last_login_time"></td>
-                        <td v-html="item.last_login_ip"></td>
-                        <td v-html="item.create_time"></td>
+                        <td>{{item.login_times}}</td>
+                        <td>{{item.last_login_time}}</td>
+                        <td>{{item.last_login_ip}}</td>
+                        <td>{{item.create_time}}</td>
                         <td>
                             <button class="btn btn-xs btn-primary" @click="editUser(item.user_id)"><i
                                     class="fa fa-edit"></i> 编辑
@@ -96,15 +96,29 @@
             },
             methods: {
                 addUser: function () {
-                    BootstrapDialog.show({
+                    BootstrapDialog.confirm({
                         title: '新增用户',
-                        message: $("<div/>").load("/admin/user/addUser")
+                        message: $("<div/>").load("/admin/user/addUser"),
+                        draggable: true,
+                        callback: function (result) {
+                            if (result) {
+                                $("#user_form").submit();
+                                return false;
+                            }
+                        }
                     });
                 },
                 editUser: function (user_id) {
-                    BootstrapDialog.show({
+                    BootstrapDialog.confirm({
                         title: '编辑用户',
-                        message: $("<div/>").load("/admin/user/editUser?id=" + user_id)
+                        message: $("<div/>").load("/admin/user/editUser?id=" + user_id),
+                        draggable: true,
+                        callback: function (result) {
+                            if (result) {
+                                $("#user_form").submit();
+                                return false;
+                            }
+                        }
                     });
                 }
             }

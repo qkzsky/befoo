@@ -41,7 +41,7 @@ function showAlertMsg(type, html, show_time, show_close_btn, callback_func) {
 // 移出固定信息条
 function removeAlertMsg() {
     $('.x-fixed-msg').remove();
-    cleanTimeout(animateTimer);
+    clearTimeout(animateTimer);
 }
 
 // 显示android的提示

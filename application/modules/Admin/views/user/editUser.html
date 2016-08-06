@@ -1,10 +1,11 @@
 <div class="row">
     <div class="col-sm-12">
-        <form id="user_form" method="post" class="form-horizontal" role="form" action="{{requestUri}}">
-            <div class="form-group">
+        <form id="user_form" method="post" class="form-horizontal" role="form" action="{{requestUri}}" v-cloak>
+            <div class="form-group required">
                 <label class="control-label col-sm-3">用户名</label>
                 <div class="col-sm-8">
-                    <input type="text" name="username" class="form-control input-sm" placeholder="用户名" v-model="userInfo.username"
+                    <input type="text" name="username" class="form-control input-sm" placeholder="用户名"
+                           v-model="userInfo.username"
                            data-bv-notempty="true"
 
                            data-bv-stringlength="true"
@@ -12,7 +13,7 @@
                     />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group required">
                 <label class="control-label col-sm-3">角色</label>
                 <div class="col-sm-8">
                     <select name="role_id" class="form-control input-sm" v-model="userInfo.role_id"
@@ -24,14 +25,15 @@
                             data-bv-greaterthan-message="请选择角色"
                     >
                         <option value="0">无</option>
-                        <option v-for="role in roleList" value="{{role.role_id}}" v-html="role.role_name"></option>
+                        <option v-for="role in roleList" value="{{role.role_id}}">{{role.role_name}}</option>
                     </select>
                 </div>
             </div>
             <div class="form-group">
                 <label class="control-label col-sm-3">昵称</label>
                 <div class="col-sm-8">
-                    <input type="text" name="nickname" class="form-control input-sm" placeholder="昵称" v-model="userInfo.nickname"
+                    <input type="text" name="nickname" class="form-control input-sm" placeholder="昵称"
+                           v-model="userInfo.nickname"
                            data-bv-stringlength="true"
                            data-bv-stringlength-max="30"
                     />
@@ -41,10 +43,12 @@
                 <label class="control-label col-sm-3">是否启用</label>
                 <div class="col-sm-8">
                     <div class="radio-inline">
-                        <label><input type="radio" name="enable" value="<?=YES?>" v-model="userInfo.enable"> <?=YES?></label>
+                        <label><input type="radio" name="enable" value="<?=YES?>" v-model="userInfo.enable"> <?=YES?>
+                        </label>
                     </div>
                     <div class="radio-inline">
-                        <label><input type="radio" name="enable" value="<?=NO?>" v-model="userInfo.enable"> <?=NO?></label>
+                        <label><input type="radio" name="enable" value="<?=NO?>" v-model="userInfo.enable"> <?=NO?>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -52,16 +56,13 @@
                 <label class="control-label col-sm-3">管理员</label>
                 <div class="col-sm-8">
                     <div class="radio-inline">
-                        <label><input type="radio" name="admin" value="<?=YES?>" v-model="userInfo.admin"> <?=YES?></label>
+                        <label><input type="radio" name="admin" value="<?=YES?>" v-model="userInfo.admin"> <?=YES?>
+                        </label>
                     </div>
                     <div class="radio-inline">
-                        <label><input type="radio" name="admin" value="<?=NO?>" v-model="userInfo.admin"> <?=NO?></label>
+                        <label><input type="radio" name="admin" value="<?=NO?>" v-model="userInfo.admin"> <?=NO?>
+                        </label>
                     </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-5 col-md-offset-3">
-                    <button type="submit" class="btn btn-primary">提交</button>
                 </div>
             </div>
         </form>
@@ -91,8 +92,10 @@
                     toast(result.message, 'error');
                     return;
                 }
-                BootstrapDialog.closeAll();
-                toast(result.message, 'success');
+                BootstrapDialog.closestDialog($form).close();
+                toast(result.message, 'success', function () {
+                    $("#list_table").trigger('initTableData');
+                });
             }, 'json');
             return false;
         });

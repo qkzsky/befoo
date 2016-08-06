@@ -1,10 +1,11 @@
 <div class="row">
     <div class="col-sm-12">
-        <form id="role_form" method="post" class="form-horizontal" role="form" action="{{requestUri}}">
-            <div class="form-group">
+        <form id="role_form" method="post" class="form-horizontal" role="form" action="{{requestUri}}" v-cloak>
+            <div class="form-group required">
                 <label class="control-label col-sm-3">角色名称</label>
                 <div class="col-sm-8">
-                    <input type="text" name="role_name" class="form-control input-sm" placeholder="角色名称" v-model="roleInfo.role_name"
+                    <input type="text" name="role_name" class="form-control input-sm" placeholder="角色名称"
+                           v-model="roleInfo.role_name"
                            data-bv-notempty="true"
 
                            data-bv-stringlength="true"
@@ -12,10 +13,11 @@
                     />
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group required">
                 <label class="control-label col-sm-3">角色Key</label>
                 <div class="col-sm-8">
-                    <input type="text" name="role_key" class="form-control input-sm" placeholder="角色Key" v-model="roleInfo.role_key"
+                    <input type="text" name="role_key" class="form-control input-sm" placeholder="角色Key"
+                           v-model="roleInfo.role_key"
                            data-bv-notempty="true"
 
                            data-bv-stringlength="true"
@@ -27,10 +29,12 @@
                 <label class="control-label col-sm-3">是否启用</label>
                 <div class="col-sm-8">
                     <div class="radio-inline">
-                        <label><input type="radio" name="enable" value="<?=YES?>" v-model="roleInfo.enable"> <?=YES?></label>
+                        <label><input type="radio" name="enable" value="<?=YES?>" v-model="roleInfo.enable"> <?=YES?>
+                        </label>
                     </div>
                     <div class="radio-inline">
-                        <label><input type="radio" name="enable" value="<?=NO?>" v-model="roleInfo.enable"> <?=NO?></label>
+                        <label><input type="radio" name="enable" value="<?=NO?>" v-model="roleInfo.enable"> <?=NO?>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -41,11 +45,6 @@
                               data-bv-stringlength="true"
                               data-bv-stringlength-max="200"
                     ></textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-5 col-md-offset-3">
-                    <button type="submit" class="btn btn-primary">提交</button>
                 </div>
             </div>
         </form>
@@ -74,8 +73,10 @@
                     toast(result.message, 'error');
                     return;
                 }
-                BootstrapDialog.closeAll();
-                toast(result.message, 'success');
+                BootstrapDialog.closestDialog($form).close();
+                toast(result.message, 'success', function () {
+                    $("#list_table").trigger('initTableData');
+                });
             }, 'json');
             return false;
         });
