@@ -67,85 +67,86 @@
 </div>
 
 <script type="text/javascript">
-    $(function () {
-
-        var roleManage = new Vue({
-            el: "#role_manage",
-            data: {
-                pageList: {}
-            },
-            methods: {
-                addRole: function () {
-                    BootstrapDialog.confirm({
-                        title: '新增角色',
-                        message: $("<div/>").load("/admin/role/addRole"),
-                        draggable: true,
-                        callback: function (result) {
-                            if (result) {
-                                $("#role_form").submit();
-                                return false;
-                            }
-                        }
-                    });
+    require(["jquery", "vue", "bs-dialog", "pagination"], function ($, Vue, BootstrapDialog) {
+        $(function () {
+            var roleManage = new Vue({
+                el: "#role_manage",
+                data: {
+                    pageList: {}
                 },
-                editRole: function (role_id) {
-                    BootstrapDialog.confirm({
-                        title: '编辑角色',
-                        message: $("<div/>").load("/admin/role/editRole?id=" + role_id),
-                        draggable: true,
-                        callback: function (result) {
-                            if (result) {
-                                $("#role_form").submit();
-                                return false;
+                methods: {
+                    addRole: function () {
+                        BootstrapDialog.confirm({
+                            title: '新增角色',
+                            message: $("<div/>").load("/admin/role/addRole"),
+                            draggable: true,
+                            callback: function (result) {
+                                if (result) {
+                                    $("#role_form").submit();
+                                    return false;
+                                }
                             }
-                        }
-                    });
-                },
-                allocResource: function (role_id, role_name) {
-                    BootstrapDialog.confirm({
-                        title: '分配资源 -- ' + role_name,
-                        message: $("<div/>").load("/admin/role/allocResource?id=" + role_id),
-                        draggable: true,
-                        callback: function (result) {
-                            if (result) {
-                                $("#alloc_resource_submit").click();
-                                return false;
+                        });
+                    },
+                    editRole: function (role_id) {
+                        BootstrapDialog.confirm({
+                            title: '编辑角色',
+                            message: $("<div/>").load("/admin/role/editRole?id=" + role_id),
+                            draggable: true,
+                            callback: function (result) {
+                                if (result) {
+                                    $("#role_form").submit();
+                                    return false;
+                                }
                             }
-                        }
-                    });
-                }
-            }
-        });
-
-        // 初始化页面数据
-        $("#list_table").on('initTableData', function () {
-            var $table = $(this);
-            var $pagination = $table.next(".m-pagination");
-            var currentPageIndex = 0;
-            if ($pagination.data('pagination')) {
-                currentPageIndex = $pagination.data('pagination').currentPageIndex;
-                $pagination.pagination('destroy');
-            }
-
-            var params = $("#search").serializeArray();
-            params.push({name: "sort", value: $table.data("sort")});
-            $pagination.pagination({
-                pageSize: '<?=PAGE_SIZE?>',
-                pageIndex: currentPageIndex,
-                remote: {
-                    url: '/admin/role/getPageData',
-                    params: params,
-                    success: function (result, pageIndex) {
-                        roleManage.pageList = result;
+                        });
+                    },
+                    allocResource: function (role_id, role_name) {
+                        BootstrapDialog.confirm({
+                            title: '分配资源 -- ' + role_name,
+                            message: $("<div/>").load("/admin/role/allocResource?id=" + role_id),
+                            draggable: true,
+                            callback: function (result) {
+                                if (result) {
+                                    $("#alloc_resource_submit").click();
+                                    return false;
+                                }
+                            }
+                        });
                     }
                 }
             });
-        });
-        $("#list_table").trigger('initTableData');
 
-        $("#search").submit(function () {
+            // 初始化页面数据
+            $("#list_table").on('initTableData', function () {
+                var $table = $(this);
+                var $pagination = $table.next(".m-pagination");
+                var currentPageIndex = 0;
+                if ($pagination.data('pagination')) {
+                    currentPageIndex = $pagination.data('pagination').currentPageIndex;
+                    $pagination.pagination('destroy');
+                }
+
+                var params = $("#search").serializeArray();
+                params.push({name: "sort", value: $table.data("sort")});
+                $pagination.pagination({
+                    pageSize: '<?=PAGE_SIZE?>',
+                    pageIndex: currentPageIndex,
+                    remote: {
+                        url: '/admin/role/getPageData',
+                        params: params,
+                        success: function (result, pageIndex) {
+                            roleManage.pageList = result;
+                        }
+                    }
+                });
+            });
             $("#list_table").trigger('initTableData');
-            return false;
+
+            $("#search").submit(function () {
+                $("#list_table").trigger('initTableData');
+                return false;
+            });
         });
     });
 </script>

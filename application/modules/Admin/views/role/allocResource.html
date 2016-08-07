@@ -1,8 +1,4 @@
 <?php use Helper\Html;?>
-<!-- zTree -->
-<?=Html::css('/components/zTree/css/metroStyle/metroStyle.css')?>
-<?=Html::javascript('/components/zTree/js/jquery.ztree.core-3.5.js')?>
-<?=Html::javascript('/components/zTree/js/jquery.ztree.excheck-3.5.js')?>
 
 <div class="row">
     <div id="alloc_resource" class="col-lg-12">
@@ -21,45 +17,46 @@
 <!-- /.col-lg-12 -->
 
 <script type="text/javascript">
-    $(function () {
-
-        var setting = {
-            check: {
-                enable: true
-            },
-            data: {
-                simpleData: {
+    require(["jquery", "vue", "bs-dialog", "toastr", "ztree"], function ($, Vue, BootstrapDialog, toastr) {
+        $(function () {
+            var setting = {
+                check: {
                     enable: true
+                },
+                data: {
+                    simpleData: {
+                        enable: true
+                    }
                 }
-            }
-        };
-        var zNodes = $.parseJSON('<?=json_encode($resource_tree_nodes)?>');
-        $.fn.zTree.init($("#resource_tree"), setting, zNodes);
-        var zTree = $.fn.zTree.getZTreeObj("resource_tree");
-        zTree.expandAll(true);
-        $("#checkAllTrue").click(function () {
-            zTree.checkAllNodes(true);
-        });
-        $("#checkAllFalse").click(function () {
-            zTree.checkAllNodes(false);
-        });
+            };
+            var zNodes = $.parseJSON('<?=json_encode($resource_tree_nodes)?>');
+            $.fn.zTree.init($("#resource_tree"), setting, zNodes);
+            var zTree = $.fn.zTree.getZTreeObj("resource_tree");
+            zTree.expandAll(true);
+            $("#checkAllTrue").click(function () {
+                zTree.checkAllNodes(true);
+            });
+            $("#checkAllFalse").click(function () {
+                zTree.checkAllNodes(false);
+            });
 
-        // 提交
-        $("#alloc_resource_submit").click(function () {
-            $(this).button("loading");
-            var resource_id = [];
-            var checkedNodes = zTree.getCheckedNodes(true);
-            for (var i in checkedNodes) {
-                resource_id.push(checkedNodes[i].id);
-            }
-            $.post('<?=$request_uri?>', {resource_id: resource_id}, function (result) {
-                if (result.code !== 0) {
-                    toast(result.message, 'error');
-                    return;
+            // 提交
+            $("#alloc_resource_submit").click(function () {
+                $(this).button("loading");
+                var resource_id = [];
+                var checkedNodes = zTree.getCheckedNodes(true);
+                for (var i in checkedNodes) {
+                    resource_id.push(checkedNodes[i].id);
                 }
-                BootstrapDialog.closeAll();
-                toast(result.message, 'success');
-            }, 'json');
+                $.post('<?=$request_uri?>', {resource_id: resource_id}, function (result) {
+                    if (result.code !== 0) {
+                        toastr.error(result.message);
+                        return;
+                    }
+                    BootstrapDialog.closeAll();
+                    toastr.success(result.message);
+                }, 'json');
+            });
         });
     });
 </script>

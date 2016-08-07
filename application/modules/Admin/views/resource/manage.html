@@ -72,74 +72,75 @@
 </div>
 
 <script type="text/javascript">
-    $(function () {
-
-        var resourceManage = new Vue({
-            el: "#resource_manage",
-            data: {
-                typeList: eval('<?=json_encode(ResourceModel::TYPE_LIST)?>'),
-                pageList: {}
-            },
-            methods: {
-                addResource: function () {
-                    BootstrapDialog.confirm({
-                        title: '新增资源',
-                        message: $("<div/>").load("/admin/resource/addResource"),
-                        draggable: true,
-                        callback: function (result) {
-                            if (result) {
-                                $("#resource_form").submit();
-                                return false;
-                            }
-                        }
-                    });
+    require(["jquery", "vue", "bs-dialog", "pagination"], function ($, Vue, BootstrapDialog) {
+        $(function () {
+            var resourceManage = new Vue({
+                el: "#resource_manage",
+                data: {
+                    typeList: eval('<?=json_encode(ResourceModel::TYPE_LIST)?>'),
+                    pageList: {}
                 },
-                editResource: function (resource_id) {
-                    BootstrapDialog.confirm({
-                        title: '编辑资源',
-                        message: $("<div/>").load("/admin/resource/editResource?id=" + resource_id),
-                        draggable: true,
-                        callback: function (result) {
-                            if (result) {
-                                $("#resource_form").submit();
-                                return false;
+                methods: {
+                    addResource: function () {
+                        BootstrapDialog.confirm({
+                            title: '新增资源',
+                            message: $("<div/>").load("/admin/resource/addResource"),
+                            draggable: true,
+                            callback: function (result) {
+                                if (result) {
+                                    $("#resource_form").submit();
+                                    return false;
+                                }
                             }
-                        }
-                    });
-                }
-            }
-        });
-
-        // 初始化页面数据
-        $("#list_table").on('initTableData', function () {
-            var $table = $(this);
-            var $pagination = $table.next(".m-pagination");
-            var currentPageIndex = 0;
-            if ($pagination.data('pagination')) {
-                currentPageIndex = $pagination.data('pagination').currentPageIndex;
-                $pagination.pagination('destroy');
-            }
-
-            var params = $("#search").serializeArray();
-            params.push({name: "sort", value: $table.data("sort")});
-            $pagination.pagination({
-//            pageSize: '<?=PAGE_SIZE?>',
-                pageSize: '2',
-                pageIndex: currentPageIndex,
-                remote: {
-                    url: '/admin/resource/getPageData',
-                    params: params,
-                    success: function (result, pageIndex) {
-                        resourceManage.pageList = result;
+                        });
+                    },
+                    editResource: function (resource_id) {
+                        BootstrapDialog.confirm({
+                            title: '编辑资源',
+                            message: $("<div/>").load("/admin/resource/editResource?id=" + resource_id),
+                            draggable: true,
+                            callback: function (result) {
+                                if (result) {
+                                    $("#resource_form").submit();
+                                    return false;
+                                }
+                            }
+                        });
                     }
                 }
             });
-        });
-        $("#list_table").trigger('initTableData');
 
-        $("#search").submit(function () {
+            // 初始化页面数据
+            $("#list_table").on('initTableData', function () {
+                var $table = $(this);
+                var $pagination = $table.next(".m-pagination");
+                var currentPageIndex = 0;
+                if ($pagination.data('pagination')) {
+                    currentPageIndex = $pagination.data('pagination').currentPageIndex;
+                    $pagination.pagination('destroy');
+                }
+
+                var params = $("#search").serializeArray();
+                params.push({name: "sort", value: $table.data("sort")});
+                $pagination.pagination({
+//            pageSize: '<?=PAGE_SIZE?>',
+                    pageSize: '2',
+                    pageIndex: currentPageIndex,
+                    remote: {
+                        url: '/admin/resource/getPageData',
+                        params: params,
+                        success: function (result, pageIndex) {
+                            resourceManage.pageList = result;
+                        }
+                    }
+                });
+            });
             $("#list_table").trigger('initTableData');
-            return false;
+
+            $("#search").submit(function () {
+                $("#list_table").trigger('initTableData');
+                return false;
+            });
         });
     });
 </script>

@@ -86,73 +86,74 @@
 </div>
 
 <script type="text/javascript">
-    $(function () {
-
-        var resourceManage = new Vue({
-            el: "#user_manage",
-            data: {
-                roleList: eval('<?=json_encode($role_list)?>'),
-                pageList: {}
-            },
-            methods: {
-                addUser: function () {
-                    BootstrapDialog.confirm({
-                        title: '新增用户',
-                        message: $("<div/>").load("/admin/user/addUser"),
-                        draggable: true,
-                        callback: function (result) {
-                            if (result) {
-                                $("#user_form").submit();
-                                return false;
-                            }
-                        }
-                    });
+    require(["jquery", "vue", "bs-dialog", "pagination"], function ($, Vue, BootstrapDialog) {
+        $(function () {
+            var resourceManage = new Vue({
+                el: "#user_manage",
+                data: {
+                    roleList: eval('<?=json_encode($role_list)?>'),
+                    pageList: {}
                 },
-                editUser: function (user_id) {
-                    BootstrapDialog.confirm({
-                        title: '编辑用户',
-                        message: $("<div/>").load("/admin/user/editUser?id=" + user_id),
-                        draggable: true,
-                        callback: function (result) {
-                            if (result) {
-                                $("#user_form").submit();
-                                return false;
+                methods: {
+                    addUser: function () {
+                        BootstrapDialog.confirm({
+                            title: '新增用户',
+                            message: $("<div/>").load("/admin/user/addUser"),
+                            draggable: true,
+                            callback: function (result) {
+                                if (result) {
+                                    $("#user_form").submit();
+                                    return false;
+                                }
                             }
-                        }
-                    });
-                }
-            }
-        });
-
-        // 初始化页面数据
-        $("#list_table").on('initTableData', function () {
-            var $table = $(this);
-            var $pagination = $table.next(".m-pagination");
-            var currentPageIndex = 0;
-            if ($pagination.data('pagination')) {
-                currentPageIndex = $pagination.data('pagination').currentPageIndex;
-                $pagination.pagination('destroy');
-            }
-
-            var params = $("#search").serializeArray();
-            params.push({name: "sort", value: $table.data("sort")});
-            $pagination.pagination({
-                pageSize: '<?=PAGE_SIZE?>',
-                pageIndex: currentPageIndex,
-                remote: {
-                    url: '/admin/user/getPageData',
-                    params: params,
-                    success: function (result, pageIndex) {
-                        resourceManage.pageList = result;
+                        });
+                    },
+                    editUser: function (user_id) {
+                        BootstrapDialog.confirm({
+                            title: '编辑用户',
+                            message: $("<div/>").load("/admin/user/editUser?id=" + user_id),
+                            draggable: true,
+                            callback: function (result) {
+                                if (result) {
+                                    $("#user_form").submit();
+                                    return false;
+                                }
+                            }
+                        });
                     }
                 }
             });
-        });
-        $("#list_table").trigger('initTableData');
 
-        $("#search").submit(function () {
+            // 初始化页面数据
+            $("#list_table").on('initTableData', function () {
+                var $table = $(this);
+                var $pagination = $table.next(".m-pagination");
+                var currentPageIndex = 0;
+                if ($pagination.data('pagination')) {
+                    currentPageIndex = $pagination.data('pagination').currentPageIndex;
+                    $pagination.pagination('destroy');
+                }
+
+                var params = $("#search").serializeArray();
+                params.push({name: "sort", value: $table.data("sort")});
+                $pagination.pagination({
+                    pageSize: '<?=PAGE_SIZE?>',
+                    pageIndex: currentPageIndex,
+                    remote: {
+                        url: '/admin/user/getPageData',
+                        params: params,
+                        success: function (result, pageIndex) {
+                            resourceManage.pageList = result;
+                        }
+                    }
+                });
+            });
             $("#list_table").trigger('initTableData');
-            return false;
+
+            $("#search").submit(function () {
+                $("#list_table").trigger('initTableData');
+                return false;
+            });
         });
     });
 </script>

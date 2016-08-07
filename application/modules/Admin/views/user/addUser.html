@@ -101,42 +101,42 @@
     </div>
 </div>
 <script type="text/javascript">
-    $(function () {
-
-        var userForm = new Vue({
-            el: '#user_form',
-            data: {
-                username: '',
-                password: '',
-                requestUri: '<?=$request_uri?>',
-                roleList: eval('(<?=json_encode($role_list)?>)')
-            }
-        });
-
-
-        $("#user_form").bootstrapValidator().on('success.form.bv', function (e) {
-            // Prevent form submission
-            e.preventDefault();
-            // Get the form instance
-            var $form = $(e.target);
-
-            $.post($form.attr('action'), $form.serialize(), function (result) {
-                if (result.code !== 0) {
-                    toast(result.message, 'error');
-                    return;
+    require(["jquery", "vue", "bs-dialog", "toastr", "bs-validator"], function ($, Vue, BootstrapDialog, toastr) {
+        $(function () {
+            var userForm = new Vue({
+                el: '#user_form',
+                data: {
+                    username: '',
+                    password: '',
+                    requestUri: '<?=$request_uri?>',
+                    roleList: eval('(<?=json_encode($role_list)?>)')
                 }
-                BootstrapDialog.closestDialog($form).close();
-                toast(result.message, 'success', function () {
+            });
+
+
+            $("#user_form").bootstrapValidator().on('success.form.bv', function (e) {
+                // Prevent form submission
+                e.preventDefault();
+                // Get the form instance
+                var $form = $(e.target);
+
+                $.post($form.attr('action'), $form.serialize(), function (result) {
+                    if (result.code !== 0) {
+                        toastr.error(result.message);
+                        return;
+                    }
+                    BootstrapDialog.closestDialog($form).close();
                     $("#list_table").trigger('initTableData');
-                });
-                BootstrapDialog.alert({
-                    type: BootstrapDialog.TYPE_SUCCESS,
-                    size: BootstrapDialog.SIZE_SMALL,
-                    title: '新增用户成功',
-                    message: $("<div/>").append($("#alert_message").html())
-                });
-            }, 'json');
-            return false;
+                    toastr.success(result.message);
+                    BootstrapDialog.alert({
+                        type: BootstrapDialog.TYPE_SUCCESS,
+                        size: BootstrapDialog.SIZE_SMALL,
+                        title: '新增用户成功',
+                        message: $("<div/>").append($("#alert_message").html())
+                    });
+                }, 'json');
+                return false;
+            });
         });
     });
 </script>

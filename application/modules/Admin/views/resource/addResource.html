@@ -92,36 +92,36 @@
     </div>
 </div>
 <script type="text/javascript">
-    $(function () {
-
-        var resourceForm = new Vue({
-            el: '#resource_form',
-            data: {
-                selectType: '',
-                requestUri: '<?=$request_uri?>',
-                resourceList: eval('(<?=json_encode($resource_list)?>)'),
-                typeList: eval('(<?=json_encode(ResourceModel::TYPE_LIST)?>)')
-            }
-        });
-
-
-        $("#resource_form").bootstrapValidator().on('success.form.bv', function (e) {
-            // Prevent form submission
-            e.preventDefault();
-            // Get the form instance
-            var $form = $(e.target);
-
-            $.post($form.attr('action'), $form.serialize(), function (result) {
-                if (result.code !== 0) {
-                    toast(result.message, 'error');
-                    return;
+    require(["jquery", "vue", "bs-dialog", "toastr", "bs-validator"], function ($, Vue, BootstrapDialog, toastr) {
+        $(function () {
+            var resourceForm = new Vue({
+                el: '#resource_form',
+                data: {
+                    selectType: '',
+                    requestUri: '<?=$request_uri?>',
+                    resourceList: eval('(<?=json_encode($resource_list)?>)'),
+                    typeList: eval('(<?=json_encode(ResourceModel::TYPE_LIST)?>)')
                 }
-                BootstrapDialog.closestDialog($form).close();
-                toast(result.message, 'success', function () {
+            });
+
+
+            $("#resource_form").bootstrapValidator().on('success.form.bv', function (e) {
+                // Prevent form submission
+                e.preventDefault();
+                // Get the form instance
+                var $form = $(e.target);
+
+                $.post($form.attr('action'), $form.serialize(), function (result) {
+                    if (result.code !== 0) {
+                        toastr.error(result.message);
+                        return;
+                    }
+                    BootstrapDialog.closestDialog($form).close();
                     $("#list_table").trigger('initTableData');
-                });
-            }, 'json');
-            return false;
+                    toastr.success(result.message);
+                }, 'json');
+                return false;
+            });
         });
     });
 </script>

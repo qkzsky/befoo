@@ -51,34 +51,34 @@
     </div>
 </div>
 <script type="text/javascript">
-    $(function () {
-
-        var roleForm = new Vue({
-            el: '#role_form',
-            data: {
-                requestUri: '<?=$request_uri?>',
-                roleInfo: eval('(<?=json_encode($role_info)?>)')
-            }
-        });
-
-
-        $("#role_form").bootstrapValidator().on('success.form.bv', function (e) {
-            // Prevent form submission
-            e.preventDefault();
-            // Get the form instance
-            var $form = $(e.target);
-
-            $.post($form.attr('action'), $form.serialize(), function (result) {
-                if (result.code !== 0) {
-                    toast(result.message, 'error');
-                    return;
+    require(["jquery", "vue", "bs-dialog", "toastr", "bs-validator"], function ($, Vue, BootstrapDialog, toastr) {
+        $(function () {
+            var roleForm = new Vue({
+                el: '#role_form',
+                data: {
+                    requestUri: '<?=$request_uri?>',
+                    roleInfo: eval('(<?=json_encode($role_info)?>)')
                 }
-                BootstrapDialog.closestDialog($form).close();
-                toast(result.message, 'success', function () {
+            });
+
+
+            $("#role_form").bootstrapValidator().on('success.form.bv', function (e) {
+                // Prevent form submission
+                e.preventDefault();
+                // Get the form instance
+                var $form = $(e.target);
+
+                $.post($form.attr('action'), $form.serialize(), function (result) {
+                    if (result.code !== 0) {
+                        toastr.error(result.message);
+                        return;
+                    }
+                    BootstrapDialog.closestDialog($form).close();
                     $("#list_table").trigger('initTableData');
-                });
-            }, 'json');
-            return false;
+                    toastr.success(result.message);
+                }, 'json');
+                return false;
+            });
         });
     });
 </script>
