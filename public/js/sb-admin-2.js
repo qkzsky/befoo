@@ -3,7 +3,6 @@
 // Sets the min-height of #page-wrapper to window size
 require(["jquery", "bootstrap", "metisMenu"], function ($) {
     $(function () {
-
         $('#side-menu').metisMenu();
 
         $(window).bind("load resize", function () {

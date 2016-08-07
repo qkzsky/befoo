@@ -1,6 +1,23 @@
 /**
  * Created by kuangzhiqiang on 16/8/7.
  */
+
+function isload(name) {
+    var isload = false;
+    var tags = {"js": "script", "css": "link"};
+    var tagname = tags[name.split(".").pop()];
+    if (tagname != undefined) {
+        var elts = document.getElementsByTagName(tagname);
+        for (var i in elts) {
+            if ((elts[i].href && elts[i].href.toString().indexOf(name) != "-1") ||
+                (elts[i].src && elts[i].src.toString().indexOf(name) != "-1")) {
+                isload = true;
+            }
+        }
+    }
+    return isload;
+}
+
 requirejs.config({
     baseUrl: "/js/app/src",
     paths: {
@@ -59,9 +76,10 @@ requirejs.config({
         },
         "bootstrap": {
             deps: function () {
-                var l = [];
-                var tag = document.getElementsByTagName("html")[0];
-                if (window.getComputedStyle(tag, null).getPropertyValue("border-box") !== "") {
+                var l = [
+                    "jquery"
+                ];
+                if (!isload("bootstrap.min.css")) {
                     l.push("css!/components/bootstrap/3.3.5/css/bootstrap.min.css");
                 }
                 return l;

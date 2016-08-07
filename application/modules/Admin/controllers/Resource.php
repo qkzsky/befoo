@@ -63,10 +63,13 @@ class ResourceController extends AdminController
     private function makeResourceKeyByUri($uri)
     {
         $resource_key = '';
-        $tmp          = explode('/', trim($uri, '/'));
-        $resource_key .= isset($tmp[0]) ? ucfirst($tmp[0]) : 'Index';
-        $resource_key .= '-' . (isset($tmp[1]) ? ucfirst($tmp[1]) : 'Index');
-        $resource_key .= '-' . (isset($tmp[2]) ? strtolower($tmp[2]) : 'index');
+        if (!empty($uri))
+        {
+            $tmp = explode('/', trim($uri, '/'));
+            $resource_key .= isset($tmp[0]) ? ucfirst($tmp[0]) : 'Index';
+            $resource_key .= '-' . (isset($tmp[1]) ? ucfirst($tmp[1]) : 'Index');
+            $resource_key .= '-' . (isset($tmp[2]) ? strtolower($tmp[2]) : 'index');
+        }
         return $resource_key;
     }
 
@@ -163,7 +166,7 @@ class ResourceController extends AdminController
             $ResourceModel = ResourceModel::getInstance();
 
             $assign = array(
-                'resource_list' => $ResourceModel->getAll(array('resource_id', 'resource_name'), "resource_type = :resource_type",[
+                'resource_list' => $ResourceModel->getAll(array('resource_id', 'resource_name'), "resource_type = :resource_type", [
                     ':resource_type' => ResourceModel::TYPE_MENU
                 ], 'menu_sort'),
                 'request_uri'   => $this->getRequest()->getRequestUri(),
@@ -232,7 +235,7 @@ class ResourceController extends AdminController
         {
             $assign = array(
                 'resource_info' => $resource_info,
-                'resource_list' => $ResourceModel->getAll(array('resource_id', 'resource_name'), "resource_type = :resource_type",[
+                'resource_list' => $ResourceModel->getAll(array('resource_id', 'resource_name'), "resource_type = :resource_type", [
                     ':resource_type' => ResourceModel::TYPE_MENU
                 ], 'menu_sort'),
                 'request_uri'   => $this->getRequest()->getRequestUri() . '?id=' . $resource_id,
