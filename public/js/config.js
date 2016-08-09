@@ -32,10 +32,10 @@ requirejs.config({
         "jquery-ajaxfileupload": "/components/jquery/jquery.ajaxfileupload",
         "bootstrap": "/components/bootstrap/3.3.5/js/bootstrap.min",
         "bootstrap-dialog": "/components/bootstrap3-dialog/js/bootstrap-dialog.min",
-        "bs-editable": "/components/bootstrap3-editable/js/bootstrap-editable.min",
-        "bs-validator": "/components/bootstrap-validator/js/language/zh_CN",
-        "bs-filestyle": "/components/bootstrap-filestyle/bootstrap-filestyle.min",
-        "bs-daterangepicker": "/components/bootstrap-daterangepicker/daterangepicker",
+        "bootstrap-editable": "/components/bootstrap3-editable/js/bootstrap-editable.min",
+        "bootstrap-validator": "/components/bootstrap-validator/js/language/zh_CN",
+        "bootstrap-filestyle": "/components/bootstrap-filestyle/bootstrap-filestyle.min",
+        "bootstrap-daterangepicker": "/components/bootstrap-daterangepicker/daterangepicker",
         "ztree": "/components/zTree/js/jquery.ztree.excheck-3.5",
         "zeroclipboard": "/components/zeroclipboard/ZeroClipboard.min",
 
@@ -48,20 +48,24 @@ requirejs.config({
         "bs-dialog-private": "/js/private/bs-dialog-private"
     },
     map: {
-        '*': {
-            'css': '/components/require-css/css.min.js',
-            'vue': 'vue-private',
-            'jquery': 'jquery-private',
-            'toastr': 'toastr-private',
-            'select2': 'select2-private',
-            'pagination': 'pagination-private',
-            'bs-dialog': 'bs-dialog-private'
+        "*": {
+            "css": "/components/require-css/css.min.js",
+            "vue": "vue-private",
+            "jquery": "jquery-private",
+            "toastr": "toastr-private",
+            "select2": "select2-private",
+            "pagination": "pagination-private",
+            "bs-dialog": "bs-dialog-private",
+            "bs-editable": "bootstrap-editable",
+            "bs-validator": "bootstrap-validator",
+            "bs-filestyle": "bootstrap-filestyle",
+            "bs-daterangepicker": "bootstrap-daterangepicker"
         },
-        'vue-private': {'vue': 'vue'},
-        'jquery-private': {'jquery': 'jquery'},
-        'toastr-private': {'toastr': 'toastr'},
-        'select2-private': {'select2': 'toastr'},
-        'pagination-private': {'pagination': 'pagination'}
+        "vue-private": {"vue": "vue"},
+        "jquery-private": {"jquery": "jquery"},
+        "toastr-private": {"toastr": "toastr"},
+        "select2-private": {"select2": "select2"},
+        "pagination-private": {"pagination": "pagination"}
     },
     shim: {
         "toastr": {

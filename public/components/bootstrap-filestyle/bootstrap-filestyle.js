@@ -275,14 +275,17 @@
 				}
 			});
 
-			// Check if browser is Firefox
-			if (window.navigator.userAgent.search(/firefox/i) > -1) {
-				// Simulating choose file for firefox
-				_self.$elementFilestyle.find('label').click(function() {
+			// Simulating choose file for firefox
+			_self.$elementFilestyle.find('label').click(function() {
+				if($(this).attr("disabled") === "disabled"){
+					return false;
+				}
+				// Check if browser is Firefox
+				if (window.navigator.userAgent.search(/firefox/i) > -1) {
 					_self.$element.click();
 					return false;
-				});
-			}
+				}
+			});
 		}
 	};
 
