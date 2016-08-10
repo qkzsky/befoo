@@ -99,18 +99,18 @@ requirejs.config({
                 "css!/components/bootstrap3-dialog/css/bootstrap-dialog.min.css"
             ]
         },
-        "bs-validator": {
+        "bootstrap-validator": {
             deps: [
                 "css!/components/bootstrap-validator/css/bootstrapValidator.min.css",
                 "/components/bootstrap-validator/js/bootstrapValidator.min.js"
             ]
         },
-        "bs-editable": {
+        "bootstrap-editable": {
             deps: [
                 "css!/components/bootstrap3-editable/css/bootstrap-editable.css"
             ]
         },
-        "bs-daterangepicker": {
+        "bootstrap-daterangepicker": {
             deps: [
                 "css!/components/bootstrap-daterangepicker/daterangepicker.css"
             ]
