@@ -32,7 +32,33 @@ class Redis
 
             // 连接redis
             $redis = new \Redis();
-            $redis->connect($db_config->host, $db_config->port);
+            $redis->connect($db_config->host, $db_config->port);//设置option
+            if (!empty($db_config->prefix))
+            {
+                $redis->setOption(\Redis::OPT_PREFIX, $db_config->prefix);
+            }
+            switch ($db_config->serializer)
+            {
+                case 'none':
+                    $redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_NONE);
+                    break;
+                case 'php':
+                    $redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_PHP);
+                    break;
+                case 'igbinary':
+                    if (extension_loaded('igbinary'))
+                    {
+                        $redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_IGBINARY);
+                    }
+                    break;
+                default:
+                    $redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_NONE);
+                    break;
+            }
+            if ($db_config->db !== '')
+            {
+                $redis->select($db_config->db);
+            }
             if (isset($db_config->auth))
             {
                 $redis->auth($db_config->auth);

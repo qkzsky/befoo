@@ -75,7 +75,7 @@ class Mysql
     /**
      * 持久化链接
      */
-    private $_p_connect = true;
+    private $_p_connect = false;
 
     /**
      * 默认字符集编码
@@ -118,13 +118,13 @@ class Mysql
      */
     static public function getInstance($id = 'default')
     {
-        if (!extension_loaded('pdo_mysql'))
-        {
-            throw new \Exception('not found extension pdo_mysql', E_ERROR);
-        }
-
         if (!isset(self::$_instances[$id]))
         {
+            if (!extension_loaded('pdo_mysql'))
+            {
+                throw new \Exception('not found extension pdo_mysql', E_ERROR);
+            }
+
             $config = \Yaf_Application::app()->getConfig()->db->mysql;
 
             if (!isset($config) || !isset($config->$id))
@@ -172,28 +172,36 @@ class Mysql
         // 链接
         if (!isset($this->_db[$db_key]))
         {
-            $charset = $db_config->charset ?: $this->_charset;
-            $dsn     = "mysql:host={$db_config->host};port={$db_config->port};dbname={$db_config->dbname};charset={$charset};";
+            $charset        = $db_config->charset ?: $this->_charset;
+            $dsn            = "mysql:host={$db_config->host};port={$db_config->port};dbname={$db_config->dbname};charset={$charset};";
+            $driver_options = array(
+                \PDO::ATTR_EMULATE_PREPARES   => false,
+                \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
+                \PDO::ATTR_PERSISTENT         => $this->_p_connect,
+                \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES '{$charset}'",
+            );
+
+            $start_time = microtime(true);
             try
             {
-                $driver_options = array(
-                    \PDO::ATTR_EMULATE_PREPARES   => false,
-                    \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
-                    \PDO::ATTR_PERSISTENT         => $this->_p_connect,
-                    \PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES '{$charset}'",
-                );
-
-                $start_time         = microtime(true);
                 $this->_db[$db_key] = new \PDO($dsn, $db_config->username, $db_config->password, $driver_options);
-                $runtime            = microtime(true) - $start_time;
-                if ($runtime > self::CONNECT_TIMEOUT)
-                {
-                    \eYaf\Logger::getLogger()->log($runtime . '`MySQL connect slowly.' . "`{$dsn}");
-                }
             }
             catch (\PDOException $e)
             {
-                throw $e;
+                \eYaf\Logger::getLogger()->log('Caught exception: ' . $e->getMessage());
+                try
+                {
+                    $this->_db[$db_key] = new \PDO($dsn, $db_config->username, $db_config->password, $driver_options);
+                }
+                catch (\PDOException $e)
+                {
+                    throw $e;
+                }
+            }
+            $runtime = microtime(true) - $start_time;
+            if ($runtime > self::CONNECT_TIMEOUT)
+            {
+                \eYaf\Logger::getLogger()->log($runtime . '`MySQL connect slowly.' . "`{$dsn}");
             }
         }
 
