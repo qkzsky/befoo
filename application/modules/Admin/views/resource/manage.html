@@ -77,7 +77,7 @@
             var resourceManage = new Vue({
                 el: "#resource_manage",
                 data: {
-                    typeList: eval('<?=json_encode(ResourceModel::TYPE_LIST)?>'),
+                    typeList: $.parseJSON('<?=json_encode(ResourceModel::TYPE_LIST)?>'),
                     pageList: {}
                 },
                 methods: {
@@ -124,7 +124,7 @@
                 params.push({name: "sort", value: $table.data("sort")});
                 $pagination.pagination({
 //            pageSize: '<?=PAGE_SIZE?>',
-                    pageSize: '2',
+                    pageSize: '4',
                     pageIndex: currentPageIndex,
                     remote: {
                         url: '/admin/resource/getPageData',

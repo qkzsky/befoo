@@ -20,15 +20,18 @@ function isload(name) {
 
 requirejs.config({
     baseUrl: "/js/app/src",
+    // urlArgs: "bust=" + (new Date()).getTime(),
     paths: {
         "md5": "/components/md5",
+        "cookie": "/components/js-cookie",
         "vue": "/components/vue/vue.min",
         "toastr": "/components/toastr/toastr.min",
         "moment": "/components/moment.min",
         "select2": "/components/select2/js/i18n/zh-CN",
         "metisMenu": "/components/metisMenu/metisMenu.min",
         "pagination": "/components/Mricode.Pagination/mricode.pagination.min",
-        "jquery": "/components/jquery/jquery-2.1.4.min",
+        "jquery": "/components/jquery/jquery-3.1.0.min",
+        "jquery-qrcode": "/components/jquery/jquery.qrcode.min",
         "jquery-ajaxfileupload": "/components/jquery/jquery.ajaxfileupload",
         "bootstrap": "/components/bootstrap/3.3.5/js/bootstrap.min",
         "bootstrap-dialog": "/components/bootstrap3-dialog/js/bootstrap-dialog.min",
@@ -75,7 +78,8 @@ requirejs.config({
         },
         "metisMenu": {
             deps: [
-                "css!/components/metisMenu/metisMenu.min.css"
+                "css!/components/metisMenu/metisMenu.min.css",
+                "css!/components/metisMenu/mini.css"
             ]
         },
         "bootstrap": {
