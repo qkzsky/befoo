@@ -63,7 +63,8 @@
             <div class="sidebar-nav navbar-collapse" :class="{'nav-mini':miniMenu}">
                 <ul id="side-menu" class="nav metismenu" v-cloak>
                     <template v-for="item in menuList">
-                        <li>
+                        <li @mouseenter="miniMenu && item.menu_list && showChildrenMenu($event, item)"
+                            @mouseleave="miniMenu && item.menu_list && hideChildrenMenu($event, item)">
                             <a href="{{item.resource_uri}}">
                                 <i v-if="item.menu_icon_class !== ''" class="{{item.menu_icon_class}} fa-fw"></i>
                                 <span class="title">
@@ -74,7 +75,7 @@
                             <ul v-if="item.menu_list" class="nav nav-second-level collapse">
                                 <template v-for="item2 in item.menu_list">
                                     <li>
-                                        <a href="{{item2.resource_uri}}" @click="">
+                                        <a href="{{item2.resource_uri}}">
                                             <i v-if="item2.menu_icon_class" class="{{item2.menu_icon_class}} fa-fw"></i>
                                             {{item2.resource_name}}
                                         </a>
@@ -97,8 +98,36 @@
                         methods: {
                             menuSwitch: function () {
                                 this.$data.miniMenu = this.$data.miniMenu ? 0 : 1;
+                                if (this.$data.miniMenu) {
+                                    $("#side-menu > li").each(function () {
+                                        if ($(this).children("ul").is(":visible")) {
+                                            if ($(this).children("ul").hasClass("collapsing")) {
+                                                $(this).children("ul").trigger("mmTransitionEnd");
+                                            }
+                                            $(this).children('a').click();
+                                        }
+                                    });
+                                }
                                 Cookie.set("mini-menu", this.$data.miniMenu);
                                 $('body').toggleClass("mini-menu");
+                            },
+                            showChildrenMenu: function (e) {
+                                var $this = $(e.target);
+                                if (!$this.children("ul").is(":visible")) {
+                                    if ($this.children("ul").hasClass("collapsing")) {
+                                        $this.children("ul").trigger("mmTransitionEnd");
+                                    }
+                                    $this.children('a').click();
+                                }
+                            },
+                            hideChildrenMenu: function (e) {
+                                var $this = $(e.target);
+                                if ($this.children("ul").is(":visible")) {
+                                    if ($this.children("ul").hasClass("collapsing")) {
+                                        $this.children("ul").trigger("mmTransitionEnd");
+                                    }
+                                    $this.children('a').click();
+                                }
                             }
                         },
                         ready: function () {
