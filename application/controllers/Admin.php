@@ -45,7 +45,7 @@ class AdminController extends ApplicationController
             // 获取菜单信息
             if (!empty($user_info))
             {
-                $UserModel   = new UserModel();
+                $UserModel       = new UserModel();
                 $this->menu_list = $UserModel->getMenuList($user_info['user_id']);
                 $this->getView()->assign('menu_list', $this->menu_list);
             }
@@ -109,9 +109,12 @@ class AdminController extends ApplicationController
             $params = explode(',', $string);
             foreach ($params as $key => $value)
             {
-                if ($key % 2 === 0 && in_array($value, $fields) && isset($params[$key + 1]))
+                if ($key % 2 === 0 && in_array($value, $fields))
                 {
-                    $sort_option[$value] = $params[$key + 1];
+                    if (isset($params[$key + 1]) && in_array(strtolower($params[$key + 1]), array("asc", "desc")))
+                    {
+                        $sort_option[$value] = $params[$key + 1];
+                    }
                 }
             }
         }

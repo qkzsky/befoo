@@ -124,19 +124,19 @@ class UserModel extends ApplicationModel
         $key = to_guid_string($params);
         if (!isset($_info[$key]))
         {
-            $sql       = "SELECT {%fields} FROM `user` u join role r on(u . role_id = r . role_id)";
+            $sql       = "SELECT {%fields} FROM `user` u join role r on(u.role_id = r.role_id)";
             $condition = " WHERE 1";
             $bind_data = array();
 
             if (!empty($params['username']))
             {
                 $condition .= " AND username LIKE :username";
-                $bind_data += array(':username' => " %{$params['username']}%");
+                $bind_data += array(':username' => "%{$params['username']}%");
             }
             if (!empty($params['nickname']))
             {
                 $condition .= " AND nickname LIKE :nickname";
-                $bind_data += array(':nickname' => " %{$params['nickname']}%");
+                $bind_data += array(':nickname' => "%{$params['nickname']}%");
             }
             if (!empty($params['role_id']))
             {
@@ -145,7 +145,7 @@ class UserModel extends ApplicationModel
             }
             if (!empty($params['enable']))
             {
-                $condition .= " AND u . enable = :enable";
+                $condition .= " AND u.enable = :enable";
                 $bind_data += array(':enable' => $params['enable']);
             }
             if (!empty($params['admin']))

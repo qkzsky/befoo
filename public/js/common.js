@@ -1,41 +1,4 @@
 require(["jquery"], function ($) {
-
-    $(".sorting, .sorting_asc, .sorting_desc, .sorting_asc_disabled, .sorting_desc_disabled").on("selectstart", function () {
-        return false;
-    });
-
-    $("table.dataTable thead").on("click", ".sorting, .sorting_asc, .sorting_desc", function () {
-        var self = $(this);
-        var sort_class = self.hasClass("sorting_asc") ? "sorting_desc" : "sorting_asc";
-        self.removeClass("sorting sorting_asc sorting_desc")
-            .addClass(sort_class)
-            .siblings(".sorting_asc, .sorting_desc")
-            .removeClass("sorting_asc sorting_desc")
-            .addClass("sorting");
-
-        var sort_option = [
-            self.data("field"), sort_class.slice(8)
-        ];
-        self.closest("table.dataTable")
-            .data("sort", sort_option)
-            .trigger("initTableData");
-    });
-
-    $("table.dataTable").each(function () {
-        var $table = $(this);
-        var $pagination = $table.next(".m-pagination");
-        if (!$pagination.length) {
-            $pagination = $("<div/>").addClass("m-pagination");
-            $table.after($pagination);
-        }
-
-        var $dataEmpty = $table.find(".dataTable_empty");
-        if ($dataEmpty.length) {
-            var colNum = $table.find("thead > tr > th").length;
-            $dataEmpty.attr("colspan", colNum);
-        }
-    });
-
     // close popover
     $('body').on('click', function (e) {
         var target = $(e.target);

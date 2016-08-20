@@ -113,10 +113,10 @@
                             },
                             showChildrenMenu: function (e) {
                                 var $this = $(e.target);
+                                if ($this.children("ul").hasClass("collapsing")) {
+                                    $this.children("ul").trigger("mmTransitionEnd");
+                                }
                                 if (!$this.children("ul").is(":visible")) {
-                                    if ($this.children("ul").hasClass("collapsing")) {
-                                        $this.children("ul").trigger("mmTransitionEnd");
-                                    }
                                     $this.children('a').click();
                                 }
                             },

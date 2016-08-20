@@ -126,7 +126,7 @@
                         return;
                     }
                     BootstrapDialog.closestDialog($form).close();
-                    $("#list_table").trigger('initTableData');
+                    $("#list_table").trigger('pg-init');
                     toastr.success(result.message);
                     BootstrapDialog.alert({
                         type: BootstrapDialog.TYPE_SUCCESS,
