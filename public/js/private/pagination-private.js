@@ -58,7 +58,7 @@ define(['jquery', 'pagination'], function ($) {
 
         var $form = $($this.data("pgForm"));
         var params = $form.serializeArray();
-        if ($this.data("field-sort")) {
+        if ($this.data("sort")) {
             params.push({name: "sort", value: $this.data("sort")});
         }
         $pagination.pagination({
