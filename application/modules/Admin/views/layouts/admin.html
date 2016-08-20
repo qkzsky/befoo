@@ -62,28 +62,23 @@
         <div class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav navbar-collapse" :class="{'nav-mini':miniMenu}">
                 <ul id="side-menu" class="nav metismenu" v-cloak>
-                    <template v-for="item in menuList">
-                        <li @mouseenter="miniMenu && item.menu_list && showChildrenMenu($event, item)"
-                            @mouseleave="miniMenu && item.menu_list && hideChildrenMenu($event, item)">
-                            <a href="{{item.resource_uri}}">
-                                <i v-if="item.menu_icon_class !== ''" class="{{item.menu_icon_class}} fa-fw"></i>
-                                <span class="title">
-                                    {{item.resource_name}}
-                                </span>
-                                <span v-if="item.menu_list && !miniMenu" class="fa arrow"></span>
-                            </a>
-                            <ul v-if="item.menu_list" class="nav nav-second-level collapse">
-                                <template v-for="item2 in item.menu_list">
-                                    <li>
-                                        <a href="{{item2.resource_uri}}">
-                                            <i v-if="item2.menu_icon_class" class="{{item2.menu_icon_class}} fa-fw"></i>
-                                            {{item2.resource_name}}
-                                        </a>
-                                    </li>
-                                </template>
-                            </ul>
-                        </li>
-                    </template>
+                    <li v-for="item in menuList"
+                        @mouseenter="miniMenu && item.menu_list && showChildrenMenu($event, item)"
+                        @mouseleave="miniMenu && item.menu_list && hideChildrenMenu($event, item)">
+                        <a href="{{item.resource_uri}}">
+                            <i v-if="item.menu_icon_class !== ''" class="{{item.menu_icon_class}} fa-fw"></i>
+                            <span class="title">{{item.resource_name}}</span>
+                            <span v-if="item.menu_list && !miniMenu" class="fa arrow"></span>
+                        </a>
+                        <ul v-if="item.menu_list" class="nav nav-second-level collapse">
+                            <li v-for="item2 in item.menu_list">
+                                <a href="{{item2.resource_uri}}">
+                                    <i v-if="item2.menu_icon_class" class="{{item2.menu_icon_class}} fa-fw"></i>
+                                    <span>{{item2.resource_name}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <!--<pre style="width: 500px;">{{$data|json}}</pre>-->
                 </ul>
             </div>
