@@ -117,7 +117,7 @@
                                     $this.children("ul").trigger("mmTransitionEnd");
                                 }
                                 if (!$this.children("ul").is(":visible")) {
-                                    $this.children('a').click();
+                                    $this.children("a").click();
                                 }
                             },
                             hideChildrenMenu: function (e) {
@@ -126,7 +126,7 @@
                                     if ($this.children("ul").hasClass("collapsing")) {
                                         $this.children("ul").trigger("mmTransitionEnd");
                                     }
-                                    $this.children('a').click();
+                                    $this.children("a").click().blur();
                                 }
                             }
                         },
