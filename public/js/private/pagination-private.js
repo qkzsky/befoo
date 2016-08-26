@@ -80,5 +80,5 @@ define(['jquery', 'pagination'], function ($) {
             $($(this).data("pgTable")).trigger("pg-init");
             return false;
         }
-    })
+    });
 });
