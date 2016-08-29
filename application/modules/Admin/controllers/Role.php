@@ -36,8 +36,8 @@ class RoleController extends AdminController
      */
     public function getPageDataAction()
     {
-        $page_index  = $this->getRequest()->getQuery('pageIndex', 1);
-        $page_size   = $this->getRequest()->getQuery('pageSize', 20);
+        $page_index  = $this->getRequest()->getQuery('page_index', 1);
+        $page_size   = $this->getRequest()->getQuery('page_size', 20);
         $sort        = $this->getRequest()->getQuery('sort', '');
         $sort_option = $this->formatSort($sort, array('role_id'));
 

@@ -67,6 +67,12 @@ define(['jquery', 'pagination'], function ($) {
             remote: {
                 url: $form.attr("action"),
                 params: params,
+                pageParams: function (data) {
+                    return {
+                        page_index: data.pageIndex,
+                        page_size: data.pageSize
+                    };
+                },
                 success: function (result, pageIndex) {
                     $this.data("pgData", result);
                     $this.trigger("pg-loaded")
