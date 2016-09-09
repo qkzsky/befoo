@@ -135,7 +135,7 @@ class ResourceController extends AdminController
                     v::key("enable", v::in(array(YES, NO))),
                     v::key("public", v::in(array(YES, NO))),
                     v::key("login", v::in(array(YES, NO)))
-                )->validate($post_data);
+                )->check($post_data);
             }
             catch (ValidationException $e)
             {

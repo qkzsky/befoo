@@ -326,7 +326,8 @@ class Mysql
         {
             if (is_object($v) && $v instanceof DbString)
             {
-                $sql = str_replace($k, (string) $v, $sql);
+                $_k  = ($k[0] === ":") ? $k : ":{$k}";
+                $sql = str_replace($_k, (string) $v, $sql);
                 unset($parameters[$k]);
             }
         }
